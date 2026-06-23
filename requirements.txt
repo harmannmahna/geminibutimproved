@@ -1,0 +1,9 @@
+google-generativeai
+sentence-transformers
+openai-whisper
+sounddevice
+scipy
+streamlit
+python-dotenv
+numpy
+scikit-learn
