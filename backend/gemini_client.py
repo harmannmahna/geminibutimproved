@@ -1,12 +1,14 @@
 import os
 from google import genai
-from google.genai import types
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv()
 
-# Initialize the client using the environment variable
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# Works both locally (.env) and on Streamlit Cloud (secrets)
+api_key = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
+client = genai.Client(api_key=api_key)
+
 
 class GeminiClient:
     def __init__(self):
