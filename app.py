@@ -1,7 +1,6 @@
 import streamlit as st
 import time
 from backend.agent import GeminiPlusAgent
-from backend.voice_handler import VoiceHandler
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
