@@ -1,7 +1,11 @@
 import streamlit as st
 import time
 from backend.agent import GeminiPlusAgent
-
+try:
+    from backend.voice_handler import VoiceHandler
+    VOICE_AVAILABLE = True
+except OSError:
+    VOICE_AVAILABLE = False
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="GeminiPlus",
@@ -303,18 +307,18 @@ if send_clicked and text_input.strip():
 
 # ── Handle: voice record ──────────────────────────────────────────────────────
 if voice_clicked:
-    # Lazy-load VoiceHandler only when first used
-    if st.session_state.voice is None:
-        with st.spinner("Loading Whisper model..."):
-            st.session_state.voice = VoiceHandler(model_size="base")
-
-    with st.spinner(f"Recording for {voice_duration}s... speak now!"):
-        transcript = st.session_state.voice.record_and_transcribe(
-            duration_seconds=voice_duration
-        )
-
-    st.session_state.transcript = transcript
-    st.rerun()
+    if not VOICE_AVAILABLE:
+        st.warning("Voice recording is not available in this cloud environment. Use text input instead.")
+    else:
+        if st.session_state.voice is None:
+            with st.spinner("Loading Whisper model..."):
+                st.session_state.voice = VoiceHandler(model_size="base")
+        with st.spinner(f"Recording for {voice_duration}s... speak now!"):
+            transcript = st.session_state.voice.record_and_transcribe(
+                duration_seconds=voice_duration
+            )
+        st.session_state.transcript = transcript
+        st.rerun()
 
 # ── Handle: send transcript ───────────────────────────────────────────────────
 # If there's a transcript waiting, show a "Send this" button
